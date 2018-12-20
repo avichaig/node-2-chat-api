@@ -16,11 +16,29 @@ const scrollToBottom = () => {
 };
 
 socket.on('connect', () => {
-    console.log('Connected to server');
+    const params = jQuery.deparam(window.location.search);
+
+    socket.emit('join', params, (err) => {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+
+        }
+    });
 });
 
 socket.on('disconnect', () => {
     console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', (users) => {
+    const ol = jQuery('<ol></ol>');
+
+    users.forEach(userName => {
+        ol.append(jQuery('<li></li>').text(userName));
+    });
+    jQuery('#users').html(ol);
 });
 
 socket.on('newMessage', (message) => {
